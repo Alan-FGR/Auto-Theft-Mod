@@ -1,7 +1,36 @@
 local szaboautotheft = {}
 
-local texttimer = 0
-local texttoshow = ""
+--configs
+local wantedlevelforstealing = 2
+local disablemodkey = 107
+local modenabled = true
+
+--		KEY CODES
+--
+--	Space = 32            D4 = 52       O = 79             NumPad4 = 100         F9 = 120
+--  PageUp = 33           D5 = 53       P = 80             NumPad5 = 101         F10 = 121
+--	Next = 34             D6 = 54       Q = 81             NumPad6 = 102         F11 = 122
+--  End = 35              D7 = 55       R = 82             NumPad7 = 103         F12 = 123
+--	Home = 36             D8 = 56       S = 83             NumPad8 = 104         F13 = 124
+--  Left = 37             D9 = 57       T = 84             NumPad9 = 105         F14 = 125
+--	Up = 38               A = 65        U = 85             Multiply = 106        F15 = 126
+--  Right = 39            B = 66        V = 86             Add = 107             F16 = 127
+--	Down = 40             C = 67        W = 87             Separator = 108       F17 = 128
+--  Select = 41           D = 68        X = 88             Subtract = 109        F18 = 129
+--  Print = 42            E = 69        Y = 89             Decimal = 110         F19 = 130
+--	Execute = 43          F = 70        Z = 90             Divide = 111          F20 = 131
+--  PrintScreen = 44      G = 71        LWin = 91          F1 = 112              F21 = 132
+--	Insert = 45           H = 72        RWin = 92          F2 = 113              F22 = 133
+--  Delete = 46           I = 73        Apps = 93          F3 = 114              F23 = 134
+--	Help = 47             J = 74        Sleep = 95         F4 = 115              F24 = 135
+--  D0 = 48               K = 75        NumPad0 = 96       F5 = 116            
+--	D1 = 49               L = 76        NumPad1 = 97       F6 = 117            
+--  D2 = 50               M = 77        NumPad2 = 98       F7 = 118            
+--	D3 = 51               N = 78        NumPad3 = 99       F8 = 119   
+--end configs
+
+local texttimer = 100
+local texttoshow = "Szabo's Auto Theft Mod"
 local function showtext5(str)
 	texttimer = 300
 	texttoshow = str
@@ -208,6 +237,9 @@ local function deletev()
 	VEHICLE.DELETE_VEHICLE(target)
 	print('SZAT - deleted')
 	target = 0;
+	payment = 0
+	stealtrigger = false
+	waittime = 0
 	
 end
 
@@ -215,9 +247,9 @@ local function spawnv(vtr)
 		
 		local driver = VEHICLE.GET_PED_IN_VEHICLE_SEAT(vtr,-1)
 		
-		local chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,101)
-		if (driver == 0) then
-			local chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,60)
+		local chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,70)
+		if (driver ~= 0) then
+			chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,101)
 		end
 		
 		
@@ -394,11 +426,29 @@ local lastplayerinv = false
 local routerefresh = 0
 local searchangle = 0
 
+local lastdisablekeystate = false
+
 function szaboautotheft.tick()
 	-- dump pos = -374.5, -122.5, 38.5
 	
 	if (texttimer > 0) then
 		drawtext5()
+	end
+	
+	if(get_key_pressed(disablemodkey) and not lastdisablekeystate) then
+		modenabled = not modenabled
+	
+		if modenabled then
+			showtext5("Szabo's Auto Theft Mod ENABLED")
+		else
+			deletev()
+			showtext5("Szabo's Auto Theft Mod DISABLED")
+		end
+	end
+	lastdisablekeystate = get_key_pressed(disablemodkey)
+	
+	if(not modenabled) then
+		return 0
 	end
 	
 	local playerPed = PLAYER.PLAYER_PED_ID()
@@ -418,7 +468,7 @@ function szaboautotheft.tick()
 		
 		
 		local disttolsc = GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, -374.5, -122.5, 38.5, true)
-		local searchradius = szclamp((disttolsc*0.004)+1, 5, 20) --TODO FINE-TUNE THIS SH*T
+		local searchradius = szclamp((disttolsc*0.003), 4, 20) --TODO FINE-TUNE THIS SH*T
 		
 		-- print (disttolsc,searchradius)
 		
@@ -486,8 +536,8 @@ function szaboautotheft.tick()
 		if (playerinv and stealtrigger) then
 			stealtrigger = false
 			playerID = PLAYER.PLAYER_ID()
-			if (stars < 2) then
-				PLAYER.SET_PLAYER_WANTED_LEVEL(playerID, 2, false)
+			if (stars < wantedlevelforstealing) then
+				PLAYER.SET_PLAYER_WANTED_LEVEL(playerID, wantedlevelforstealing, false)
 				PLAYER.SET_PLAYER_WANTED_LEVEL_NOW(playerID, false)
 			end
 		end
@@ -532,8 +582,8 @@ function szaboautotheft.tick()
 				texttoshow = "Leave the vehicle"
 				drawtext5()
 			else
-				deletev()
 				addmoneytoplayer(payment)
+				deletev()
 				payment = 0
 				showtext5("Thanks for your business")
 			end
