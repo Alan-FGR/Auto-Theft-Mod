@@ -403,7 +403,9 @@ local function spawnv(vtr)
 			ENTITY.SET_ENTITY_AS_MISSION_ENTITY(newv, true, true)
 			local blip = UI.ADD_BLIP_FOR_ENTITY(newv)
 			--UI.SET_BLIP_SCALE(blip, 1.6)
-			UI.SET_BLIP_COLOUR(blip, 0xFF00DDFF)
+			UI.SET_BLIP_COLOUR(blip, 19)--4278246911)--, 0xFF00DDFF)  --broken in v10
+			UI.SET_BLIP_FLASHES(blip, false)
+			
 			
 			if (chance < 70) then
 				showtext5("There's a VALUABLE CAR nearby you can sell. It's marked on your GPS.\nPayment: $"..tostring(payment))
@@ -527,7 +529,7 @@ function szaboautotheft.tick()
 		
 		if (playerinv and routerefresh > 100) then
 			UI.SET_BLIP_ROUTE(lscblip, true)
-			UI.SET_BLIP_ROUTE_COLOUR(lscblip, 0x00FF00FF)
+			UI.SET_BLIP_ROUTE_COLOUR(lscblip, 0x00FF00FF) --broken in v10
 			routerefresh = 0
 			-- print('refreshing route')
 		end
