@@ -1,106 +1,3 @@
-<<<<<<< HEAD
-local szaboautotheft = {}
-
---configs
-local wantedlevelforstealing = 2
-local disablemodkey = 107
-local modenabled = true
-
---		KEY CODES
---
---	Space = 32            D4 = 52       O = 79             NumPad4 = 100         F9 = 120
---  PageUp = 33           D5 = 53       P = 80             NumPad5 = 101         F10 = 121
---	Next = 34             D6 = 54       Q = 81             NumPad6 = 102         F11 = 122
---  End = 35              D7 = 55       R = 82             NumPad7 = 103         F12 = 123
---	Home = 36             D8 = 56       S = 83             NumPad8 = 104         F13 = 124
---  Left = 37             D9 = 57       T = 84             NumPad9 = 105         F14 = 125
---	Up = 38               A = 65        U = 85             Multiply = 106        F15 = 126
---  Right = 39            B = 66        V = 86             Add = 107             F16 = 127
---	Down = 40             C = 67        W = 87             Separator = 108       F17 = 128
---  Select = 41           D = 68        X = 88             Subtract = 109        F18 = 129
---  Print = 42            E = 69        Y = 89             Decimal = 110         F19 = 130
---	Execute = 43          F = 70        Z = 90             Divide = 111          F20 = 131
---  PrintScreen = 44      G = 71        LWin = 91          F1 = 112              F21 = 132
---	Insert = 45           H = 72        RWin = 92          F2 = 113              F22 = 133
---  Delete = 46           I = 73        Apps = 93          F3 = 114              F23 = 134
---	Help = 47             J = 74        Sleep = 95         F4 = 115              F24 = 135
---  D0 = 48               K = 75        NumPad0 = 96       F5 = 116            
---	D1 = 49               L = 76        NumPad1 = 97       F6 = 117            
---  D2 = 50               M = 77        NumPad2 = 98       F7 = 118            
---	D3 = 51               N = 78        NumPad3 = 99       F8 = 119   
---end configs
-
-local texttimer = 100
-local texttoshow = "Szabo's Auto Theft Mod"
-local function showtext5(str)
-	texttimer = 300
-	texttoshow = str
-end
-
-local function drawtext5()
-	UI.SET_TEXT_FONT(0)
-	UI.SET_TEXT_SCALE(0.5, 0.6)
-	UI.SET_TEXT_COLOUR(255, 0, 0, 255)
-	UI.SET_TEXT_WRAP(0, 1)
-	UI.SET_TEXT_CENTRE(true)
-	UI.SET_TEXT_DROPSHADOW(15, 15, 0, 0, 0)
-	UI.SET_TEXT_EDGE(5, 0, 0, 0, 255)
-	UI._SET_TEXT_ENTRY("STRING")
-	UI._ADD_TEXT_COMPONENT_STRING(texttoshow)
-	UI._DRAW_TEXT(0.5, 0.1)
-	texttimer = texttimer-1
-end
-
-local function szclamp(val, xmin, xmax)
-	if (val < xmin) then
-		return xmin
-	elseif (val > xmax) then
-		return xmax
-	else
-		return val
-	end
-end
-
-local function addmoneytoplayer(val)
-
-	mhash = GAMEPLAY.GET_HASH_KEY("SP0_TOTAL_CASH")
-	if (PED.IS_PED_MODEL(PLAYER.PLAYER_PED_ID(), GAMEPLAY.GET_HASH_KEY("player_one"))) then                                
-		mhash = GAMEPLAY.GET_HASH_KEY("SP1_TOTAL_CASH")                                     
-	elseif (PED.IS_PED_MODEL(PLAYER.PLAYER_PED_ID(), GAMEPLAY.GET_HASH_KEY("player_two"))) then
-		mhash = GAMEPLAY.GET_HASH_KEY("SP2_TOTAL_CASH")  
-	end
-	
-	local _, curval = STATS.STAT_GET_INT(mhash, 0, -1)
-	STATS.STAT_SET_INT(mhash, curval+val, true)
-		
-end
-
-local carslist = {
---expensive cars
-{0xB779A091,	600000	},--adder
-{0x9AE6DDA1,	93000	},--bullet
-{0x7B8AB45F,	117000	},--carboniz
-{0xB1D95DA0,	390000	},--cheetah
-{0x13B57D8A,	111000	},--cogcabri
-{0xB2FE5CF9,	477000	},--entityxf
-{0xFFB15B5E,	123000	},--exemplar
-{0xDCBCBE48,	111000	},--f620
-{0x8911B9F5,	87000	},--feltzer?
-{0xBC32A33B,	99000	},--fq2?
-{0x18F25AC7,	264000	},--infernus
-{0x3EAB5555,	285000	},--jb700
-{0xE62B361B,	294000	},--monroe
-{0x3D8FA25C,	72000	},--ninef
-{0xA8E38B01,	72000	},--ninef2
-{0x8CB29A14,	79000	},--rapidgt
-{0x679450AF,	84000	},--rapidgt2
-{0x5C23AF9B,	600000	},--stinger
-{0x82E499FA,	660000	},--stingergt
-{0x42F2ED16,	150000	},--superd
-{0x142E0DC3,	144000	},--vacca
-{0x9F4B77BE,	90000	},--voltic
-{0x2D3BD401,	2000000	}--ztype
-=======
 -- Auto Theft script
 -- Original by szabo, rewritten by laxu
 -- Spawns a vehicle or cargo vehicle that can be delivered and sold to Los Santos Customs
@@ -133,7 +30,6 @@ local carsList = {
     {0x142E0DC3,    144000  },--vacca
     {0x9F4B77BE,    90000   },--voltic
     {0x2D3BD401,    2000000 } --ztype
->>>>>>> c7e4e228995bc9ae6b05ddc43a63d2fec70d5464
 }
 
 local cargoLowVal = {
@@ -243,204 +139,6 @@ local textTimer = 0
 local textToShow = ""
 
 local target = 0
-<<<<<<< HEAD
-local payment = 0
-local pedslist = {}
-local lscblip = 0
-local waittime = 0
-local stealtrigger = false
--- local jacktrigger = false
-
-local function deletev()
-	for _,v in ipairs(pedslist) do
-		ENTITY.DELETE_ENTITY(v)
-	end
-	pedslist = {}
-	
-	VEHICLE.DELETE_VEHICLE(target)
-	print('SZAT - deleted')
-	target = 0;
-	payment = 0
-	stealtrigger = false
-	waittime = 0
-	
-end
-
-local function spawnv(vtr)
-		
-		local driver = VEHICLE.GET_PED_IN_VEHICLE_SEAT(vtr,-1)
-		
-		local chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,70)
-		if (driver ~= 0) then
-			chance = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,101)
-		end
-		
-		
-		local hash = 0
-		local pedlist = {}
-		
-		local spawnpos = ENTITY.GET_ENTITY_COORDS(vtr, true)
-		local lscdist = GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(spawnpos.x,spawnpos.y,spawnpos.z, -374.5, -122.5, 38.5, true)
-		
-		local rich = false
-		
-		if (chance < 70) then --TODO ADJUST
-			cdata = carslist[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#carslist+1)]
-			hash = cdata[1]
-			payment = cdata[2]
-			if(chance > 40) then
-				pedlist = carspeds
-				rich = true
-			else
-				pedlist = cargospeds
-			end
-		elseif (chance < 85) then
-			hash = cargo1list[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#cargo1list+1)]
-			payment = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(50000,300000) + (lscdist*10)
-			pedlist = cargospeds
-		elseif (chance < 95) then
-			hash = cargo2list[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#cargo2list+1)]
-			payment = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(300000,2000000) + (lscdist*50)
-			pedlist = cargospeds
-		else
-			hash = cargo3list[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#cargo3list+1)]
-			payment = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(2000000,5000000) + (lscdist*100)
-			pedlist = cargo3peds
-		end
-		
-		payment = math.floor(payment)
-		
-		
-		if (STREAMING.IS_MODEL_IN_CDIMAGE(hash) and STREAMING.IS_MODEL_A_VEHICLE(hash)) then
-		
-			STREAMING.REQUEST_MODEL(hash)
-			
-			stealtrigger = true;
-			-- jacktrigger = true
-			
-			while (not STREAMING.HAS_MODEL_LOADED(hash)) do
-				wait(0)
-			end
-			
-			local vheading = ENTITY.GET_ENTITY_HEADING(vtr)
-			
-			ENTITY.SET_ENTITY_AS_MISSION_ENTITY(vtr, true, true)
-			VEHICLE.DELETE_VEHICLE(vtr)
-			
-			newv = VEHICLE.CREATE_VEHICLE(hash, spawnpos.x,spawnpos.y,spawnpos.z, vheading, true, true)
-			
-			if (chance < 60) then
-				--mod the v
-				local cols = modcols[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#modcols+1)]
-				VEHICLE.SET_VEHICLE_MOD_KIT(newv, 0)
-				
-				local pc = GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,100)
-				
-				local paint = 0
-				if (pc < 5) then
-					paint = 5
-				elseif (pc < 30) then
-					paint = 3
-				end
-				
-				VEHICLE.SET_VEHICLE_MOD_COLOR_1(newv, paint, 0, 0)
-				VEHICLE.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(newv,cols[1],cols[2],cols[3])
-				VEHICLE.SET_VEHICLE_EXTRA_COLOURS(newv, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,75), GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,41))
-				VEHICLE.TOGGLE_VEHICLE_MOD(newv, 18, true)
-				VEHICLE.SET_VEHICLE_WHEEL_TYPE(newv, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,7))
-				VEHICLE.SET_VEHICLE_WINDOW_TINT(newv, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,6))
-				VEHICLE.SET_VEHICLE_MOD(newv, 0, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 1, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 2, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 3, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 4, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 5, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 6, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 7, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 8, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 9, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 10, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,2), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 11, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,4), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 12, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,3), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 13, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,3), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 14, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,15), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 15, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,4), false)
-				VEHICLE.SET_VEHICLE_MOD(newv, 23, GAMEPLAY.GET_RANDOM_INT_IN_RANGE(0,20), true)
-			end
-			
-			if (driver ~= 0) then
-				local numtogen = 1 --TODO set to 1 and make peds attack when v is hijacked
-				if (rich) then
-					numtogen = 0
-				end
-				
-				-- PED.CREATE_GROUP(167)
-				for i = 0, numtogen, 1 do
-					pedhash = pedlist[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#pedlist+1)]
-					
-					STREAMING.REQUEST_MODEL(pedhash)
-					while(not STREAMING.HAS_MODEL_LOADED(pedhash)) do
-						wait(0)
-					end
-					local newped = PED.CREATE_PED( 0,pedhash,spawnpos.x,spawnpos.y,spawnpos.z,1,false,true)
-					table.insert(pedslist, newped)
-					-- PED.SET_PED_COMBAT_ATTRIBUTES(newped, 100, true)
-					-- PED.SET_PED_COMBAT_ABILITY(newped, 100)
-					-- AI.TASK_COMBAT_PED(newped, PLAYER.PLAYER_PED_ID(), 1, 1)
-					-- PED.SET_PED_AS_ENEMY(newped, true)
-					-- PED.SET_PED_STAY_IN_VEHICLE_WHEN_JACKED(newped, false)
-					PED.SET_PED_AS_COP(newped, true)
-					PED.SET_PED_CAN_SWITCH_WEAPON(newped,true)
-					if (not rich) then
-						WEAPON.GIVE_WEAPON_TO_PED(newped, GAMEPLAY.GET_HASH_KEY(weapons[GAMEPLAY.GET_RANDOM_INT_IN_RANGE(1,#weapons+1)]),1000,true,true)
-					end
-					-- PED.SET_PED_DIES_WHEN_INJURED(newped, false)
-					-- PED.SET_PED_MAX_HEALTH(newped, 1000)
-					-- PED.SET_PED_ARMOUR(newped, 1000)
-					
-					PED.SET_PED_INTO_VEHICLE(newped, newv, i-1)
-					if (i==0) then
-						--AI.TASK_VEHICLE_DRIVE_WANDER(newped, newv, 3, 2)
-						AI.TASK_VEHICLE_DRIVE_WANDER(newped, newv, 30, 3)
-					end
-					
-					-- PED.SET_PED_AS_GROUP_MEMBER(newped, 167)
-					-- PED.SET_PED_RELATIONSHIP_GROUP_HASH(newped, GAMEPLAY.GET_HASH_KEY(""))
-					
-					STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(pedhash)
-				end
-			else
-				VEHICLE.SET_VEHICLE_NEEDS_TO_BE_HOTWIRED(newv, true)
-				VEHICLE.SET_VEHICLE_DOORS_LOCKED(newv,0)
-				VEHICLE.SET_VEHICLE_DOORS_LOCKED(newv,1)
-				VEHICLE.SET_VEHICLE_DOORS_LOCKED_FOR_ALL_PLAYERS(newv,true)
-				VEHICLE.SET_VEHICLE_ALARM(newv, true)
-			end
-			
-			
-			VEHICLE.SET_VEHICLE_ON_GROUND_PROPERLY(newv)
-			ENTITY.SET_ENTITY_AS_MISSION_ENTITY(newv, true, true)
-			
-			STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(hash)
-			
-			ENTITY.SET_ENTITY_AS_MISSION_ENTITY(newv, true, true)
-			local blip = UI.ADD_BLIP_FOR_ENTITY(newv)
-			--UI.SET_BLIP_SCALE(blip, 1.6)
-			UI.SET_BLIP_COLOUR(blip, 19)--4278246911)--, 0xFF00DDFF)  --broken in v10
-			UI.SET_BLIP_FLASHES(blip, false)
-			
-			
-			if (chance < 70) then
-				showtext5("There's a VALUABLE CAR nearby you can sell. It's marked on your GPS.\nPayment: $"..tostring(payment))
-			else
-				showtext5("There's a CARGO VEHICLE nearby you can sell. It's marked on your GPS.\nPayment: $"..tostring(payment))
-			end
-			
-			return newv
-		
-		end
-
-=======
 local missionData = {}
 local creatingMission = false
 
@@ -451,7 +149,6 @@ local lscBlip = 0
 local lscPos = {x = -374.5, y = -122.5, z = 38.5}
 local lscDistance = 0
 local minDistanceToLSC = 300
-local maxDistanceToLSC = 1000
 local minSuccessDistanceToLSC = 30
 
 -- Target vehicle variables
@@ -470,205 +167,24 @@ local wantedLevel = 0
 local routeRefresh = 0
 local routeRefreshRate = 100
 
--- Wait timers in ms
-local cooldownTime = 6000
+-- Wait timers
+local cooldownTime = 500
 local cooldownCounter = 0
-local waitTime = 3000
+local waitTime = 500
 local waitTimeCounter = 0
 
 -- Chance variables
 local chance = 0
 local chances = { vehicle = 70, lowCargo = 85, medCargo = 95, isModded = 60 }
 
- -- DEBUG MODE, enable to activate alternate parameters
-local debug_mode = true
-
-if(debug_mode) then
-    cooldownTime = 500
-    waitTime = 1000
-    minDistanceToLSC = 100
-    maxDistanceToLSC = 100000
-end
-
 local function randomInt(a, b)
     return GAMEPLAY.GET_RANDOM_INT_IN_RANGE(a, b)
->>>>>>> c7e4e228995bc9ae6b05ddc43a63d2fec70d5464
 end
 
 local function randomFloat(a, b)
     return GAMEPLAY.GET_RANDOM_FLOAT_IN_RANGE(a, b)
 end
 
-<<<<<<< HEAD
-local lastplayerinv = false
-local routerefresh = 0
-local searchangle = 0
-
-local lastdisablekeystate = false
-
-function szaboautotheft.tick()
-	-- dump pos = -374.5, -122.5, 38.5
-	
-	if (texttimer > 0) then
-		drawtext5()
-	end
-	
-	if(get_key_pressed(disablemodkey) and not lastdisablekeystate) then
-		modenabled = not modenabled
-	
-		if modenabled then
-			showtext5("Szabo's Auto Theft Mod ENABLED")
-		else
-			deletev()
-			showtext5("Szabo's Auto Theft Mod DISABLED")
-		end
-	end
-	lastdisablekeystate = get_key_pressed(disablemodkey)
-	
-	if(not modenabled) then
-		return 0
-	end
-	
-	local playerPed = PLAYER.PLAYER_PED_ID()
-	local player = PLAYER.GET_PLAYER_PED(playerPed)
-	-- local playerID = PLAYER.PLAYER_ID()
-	local playerPos = ENTITY.GET_ENTITY_COORDS(playerPed, true)
-	
-	local stars = PLAYER.GET_PLAYER_WANTED_LEVEL(player)
-	
-	-- print(stars)
-	
-	if (target == 0) then
-	
-		if (lscblip ~= 0) then
-			UI.REMOVE_BLIP(lscblip)
-		end
-		
-		
-		local disttolsc = GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, -374.5, -122.5, 38.5, true)
-		local searchradius = szclamp((disttolsc*0.003), 4, 20) --TODO FINE-TUNE THIS SH*T
-		
-		-- print (disttolsc,searchradius)
-		
-		searchangle = searchangle + 0.01
-		if (searchangle > 2) then
-			searchangle = 0
-		end
-		local searchdist = 180
-		local searchpos = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, math.sin(searchangle*math.pi)*searchdist, math.cos(searchangle*math.pi)*searchdist, math.sin(searchangle*4*math.pi)*(searchdist*0.6))
-		local rv = VEHICLE.GET_RANDOM_VEHICLE_IN_SPHERE(searchpos.x, searchpos.y, searchpos.z, searchradius, 0, 0)
-	
-		-- rv = VEHICLE.GET_CLOSEST_VEHICLE(playerPos.x, playerPos.y, playerPos.z, 5, 0, 70)
-		
-		--																				800
-		if (not VEHICLE.IS_THIS_MODEL_A_CAR(ENTITY.GET_ENTITY_MODEL(rv)) or disttolsc < 500) then
-			rv = 0
-		end
-		
-		if (rv ~= 0 and stars == 0) then
-		
-			-- local t = ENTITY.GET_ENTITY_COORDS(rv, true)
-			-- local disttolsc = GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(t.x, t.y, t.z, -374.5, -122.5, 38.5, true)
-			
-			-- print('CAR FOUND, dtlsc',disttolsc)
-			
-			local rvpos = ENTITY.GET_ENTITY_COORDS(rv, true)
-			-- local dist = GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, rvpos.x, rvpos.y, rvpos.z, true)
-			
-			-- print('dtp',dist)
-			
-			-- if (dist > 150 and dist < 250) then
-			--if (dist > 1 and dist < 20) then
-				
-			if (UI.GET_BLIP_FROM_ENTITY(rv) == 0) then
-				
-				target = spawnv(rv)
-				waittime = 1500
-
-			end
-			-- end
-
-		end
-	
-	else
-		local t = ENTITY.GET_ENTITY_COORDS(target, true)
-		
-		local playerinv = PED.IS_PED_IN_VEHICLE(playerPed, target, true)
-		
-		if (playerinv and not lastplayerinv) then
-			nblip = UI.ADD_BLIP_FOR_COORD(-374.5, -122.5, 38.5)
-			UI.SET_BLIP_COLOUR(nblip, 0x00FF00FF)
-			lscblip = nblip
-			print('added route blip')
-		end
-		lastplayerinv = playerinv
-		
-		if (playerinv and routerefresh > 100) then
-			UI.SET_BLIP_ROUTE(lscblip, true)
-			UI.SET_BLIP_ROUTE_COLOUR(lscblip, 0x00FF00FF) --broken in v10
-			routerefresh = 0
-			-- print('refreshing route')
-		end
-		routerefresh = routerefresh+1
-		
-		if (playerinv and stealtrigger) then
-			stealtrigger = false
-			playerID = PLAYER.PLAYER_ID()
-			if (stars < wantedlevelforstealing) then
-				PLAYER.SET_PLAYER_WANTED_LEVEL(playerID, wantedlevelforstealing, false)
-				PLAYER.SET_PLAYER_WANTED_LEVEL_NOW(playerID, false)
-			end
-		end
-		
-		-- NO WAY TO MAKE THIS WORK
-		-- if (jacktrigger and not playerinv) then
-			-- jacktrigger = false
-			-- local ped1 = VEHICLE.GET_PED_IN_VEHICLE_SEAT(target, -1)
-			-- local ped2 = VEHICLE.GET_PED_IN_VEHICLE_SEAT(target, -1)
-			-- if(PED.IS_PED_BEING_JACKED(ped1) or PED.IS_PED_BEING_JACKED(ped2)) then
-				-- AI.TASK_LEAVE_VEHICLE(ped1, target, 4096) --4096
-				-- AI.TASK_COMBAT_PED(ped1, PLAYER.PLAYER_PED_ID(), 1, 1)
-				-- AI.TASK_LEAVE_VEHICLE(ped2, target, 4096)
-				-- AI.TASK_COMBAT_PED(ped2, PLAYER.PLAYER_PED_ID(), 1, 1)
-			-- end
-		-- end
-		
-		-- print(VEHICLE.GET_VEHICLE_ENGINE_HEALTH(target))
-		
-		if(VEHICLE.GET_VEHICLE_ENGINE_HEALTH(target) < 600) then
-			target = 0
-			payment = 0
-			while (UI.GET_BLIP_FROM_ENTITY(target) ~= 0) do
-				UI.REMOVE_BLIP(UI.GET_BLIP_FROM_ENTITY(target))
-				wait(0)
-			end
-			ENTITY.SET_VEHICLE_AS_NO_LONGER_NEEDED(target)
-			showtext5("This vehicle is too damaged to sell")
-		end
-		
-		if (waittime > 0) then
-			waittime = waittime-1
-		end
-		print(waittime)
-		
-		--																										300	or not ENTITY.DOES_ENTITY_EXIST(target)
-		if (GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, t.x, t.y, t.z, true	) > 300 and waittime<=0) then
-			deletev()
-			showtext5("The vehicle was lost")
-		elseif (GAMEPLAY.GET_DISTANCE_BETWEEN_COORDS(t.x, t.y, t.z, -374.5, -122.5, 38.5, true) < 30 and stars == 0) then
-			if (playerinv) then
-				texttoshow = "Leave the vehicle"
-				drawtext5()
-			else
-				addmoneytoplayer(payment)
-				deletev()
-				payment = 0
-				showtext5("Thanks for your business")
-			end
-		end
-	end
-	
-=======
 local function clampVal(val, min, max)
     if (val < min) then
         return min
@@ -677,7 +193,6 @@ local function clampVal(val, min, max)
     else
         return val
     end
->>>>>>> c7e4e228995bc9ae6b05ddc43a63d2fec70d5464
 end
 
 local function setNotification(str)
@@ -839,21 +354,24 @@ local function addPedsToCar(vehicle, numPeds, spawnPos)
         end
         
 
-        PED.SET_PED_INTO_VEHICLE(newPed, vehicle, i-2)  -- Using i-2 as GTA V assigns driver as position -1 for some reason
+        PED.SET_PED_INTO_VEHICLE(newPed, vehicle, i-1)
         if (i==1) then
+            --AI.TASK_VEHICLE_DRIVE_WANDER(newPed, newVehicle, 3, 2)
             AI.TASK_VEHICLE_DRIVE_WANDER(newPed, vehicle, 30, 3)
         end
+        
+        -- PED.SET_PED_AS_GROUP_MEMBER(newPed, 167)
+        -- PED.SET_PED_RELATIONSHIP_GROUP_HASH(newPed, GAMEPLAY.GET_HASH_KEY(""))
         
         STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(pedHash)
     end
 end
 
 local function getRandomVehiclePos(pos)
-    local newPos = pos -- Copy pos so we get a valid Vector 3 object
+    -- Based on https://github.com/IncoCode/scripthookvdotnet/blob/master/source/Vehicle.cpp
+    local newPos = pos
 
-    -- Fine tune 4th, 6th, 7th and 8th parameter to control where the car spawns
-    PATHFIND.GET_NTH_CLOSEST_VEHICLE_NODE(pos.x, pos.y, pos.z, 6
-        , newPos, 1, 1, 1)
+    PATHFIND.GET_NTH_CLOSEST_VEHICLE_NODE(pos.x, pos.y, pos.z, 1, newPos, 1, 1, 1)
     return newPos
 end
 
@@ -883,17 +401,11 @@ local function spawnVehicle()
             setVehicleMods(newVehicle)
         end
 
-        -- Use 0-10 here because the random int doesn't seem to work that great for a small range, possibly flooring/ceiling result
-        local hasPeds = randomInt(0,10) 
-        print("peds: "..tostring(hasPeds))
+        local hasPeds = randomInt(0,1)
         
-        if(hasPeds > 5) then
+        if(hasPeds == 1) then
             -- Add peds to car
-            local numPeds = 1
-            local pedRandomizer = randomInt(0,10)
-            if(pedRandomizer > 5) then
-                numPeds = 2
-            end
+            local numPeds = randomInt(1,2)
             addPedsToCar(newVehicle, numPeds, newPos)
         else
             -- Empty vehicle
@@ -942,7 +454,7 @@ local function setBlip(blipName, isOn)
         if(isOn) then
             UI.REMOVE_BLIP(lscBlip)
             lscBlip = UI.ADD_BLIP_FOR_COORD(lscPos.x, lscPos.y, lscPos.z)
-            UI.SET_BLIP_COLOUR(lscBlip, 0xFFFFCCFF)
+            UI.SET_BLIP_COLOUR(lscBlip, 0x00FFCCFF)
         else
             UI.REMOVE_BLIP(lscBlip)
             lscBlip = 0
@@ -1119,12 +631,6 @@ function szaboAutoTheft.tick()
             
             if(lscDistance < minDistanceToLSC) then
                 -- Player too close to LSC, can't start mission, add some cooldown before checking again
-                cooldownCounter = cooldownTime / 2
-                return 
-            end
-
-            if(lscDistance > maxDistanceToLSC) then
-                -- Player too far from LSC, can't start mission, add some cooldown before checking again
                 cooldownCounter = cooldownTime / 2
                 return 
             end
