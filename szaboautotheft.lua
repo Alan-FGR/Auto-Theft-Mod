@@ -149,6 +149,7 @@ local lscBlip = 0
 local lscPos = {x = -374.5, y = -122.5, z = 38.5}
 local lscDistance = 0
 local minDistanceToLSC = 300
+local maxDistanceToLSC = 1000
 local minSuccessDistanceToLSC = 30
 
 -- Target vehicle variables
@@ -167,15 +168,25 @@ local wantedLevel = 0
 local routeRefresh = 0
 local routeRefreshRate = 100
 
--- Wait timers
-local cooldownTime = 500
+-- Wait timers in ms
+local cooldownTime = 6000
 local cooldownCounter = 0
-local waitTime = 500
+local waitTime = 3000
 local waitTimeCounter = 0
 
 -- Chance variables
 local chance = 0
 local chances = { vehicle = 70, lowCargo = 85, medCargo = 95, isModded = 60 }
+
+ -- DEBUG MODE, enable to activate alternate parameters
+local debug_mode = true
+
+if(debug_mode) then
+    cooldownTime = 500
+    waitTime = 1000
+    minDistanceToLSC = 100
+    maxDistanceToLSC = 100000
+end
 
 local function randomInt(a, b)
     return GAMEPLAY.GET_RANDOM_INT_IN_RANGE(a, b)
@@ -354,24 +365,21 @@ local function addPedsToCar(vehicle, numPeds, spawnPos)
         end
         
 
-        PED.SET_PED_INTO_VEHICLE(newPed, vehicle, i-1)
+        PED.SET_PED_INTO_VEHICLE(newPed, vehicle, i-2)  -- Using i-2 as GTA V assigns driver as position -1 for some reason
         if (i==1) then
-            --AI.TASK_VEHICLE_DRIVE_WANDER(newPed, newVehicle, 3, 2)
             AI.TASK_VEHICLE_DRIVE_WANDER(newPed, vehicle, 30, 3)
         end
-        
-        -- PED.SET_PED_AS_GROUP_MEMBER(newPed, 167)
-        -- PED.SET_PED_RELATIONSHIP_GROUP_HASH(newPed, GAMEPLAY.GET_HASH_KEY(""))
         
         STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(pedHash)
     end
 end
 
 local function getRandomVehiclePos(pos)
-    -- Based on https://github.com/IncoCode/scripthookvdotnet/blob/master/source/Vehicle.cpp
-    local newPos = pos
+    local newPos = pos -- Copy pos so we get a valid Vector 3 object
 
-    PATHFIND.GET_NTH_CLOSEST_VEHICLE_NODE(pos.x, pos.y, pos.z, 1, newPos, 1, 1, 1)
+    -- Fine tune 4th, 6th, 7th and 8th parameter to control where the car spawns
+    PATHFIND.GET_NTH_CLOSEST_VEHICLE_NODE(pos.x, pos.y, pos.z, 6
+        , newPos, 1, 1, 1)
     return newPos
 end
 
@@ -401,11 +409,17 @@ local function spawnVehicle()
             setVehicleMods(newVehicle)
         end
 
-        local hasPeds = randomInt(0,1)
+        -- Use 0-10 here because the random int doesn't seem to work that great for a small range, possibly flooring/ceiling result
+        local hasPeds = randomInt(0,10) 
+        print("peds: "..tostring(hasPeds))
         
-        if(hasPeds == 1) then
+        if(hasPeds > 5) then
             -- Add peds to car
-            local numPeds = randomInt(1,2)
+            local numPeds = 1
+            local pedRandomizer = randomInt(0,10)
+            if(pedRandomizer > 5) then
+                numPeds = 2
+            end
             addPedsToCar(newVehicle, numPeds, newPos)
         else
             -- Empty vehicle
@@ -454,7 +468,7 @@ local function setBlip(blipName, isOn)
         if(isOn) then
             UI.REMOVE_BLIP(lscBlip)
             lscBlip = UI.ADD_BLIP_FOR_COORD(lscPos.x, lscPos.y, lscPos.z)
-            UI.SET_BLIP_COLOUR(lscBlip, 0x00FFCCFF)
+            UI.SET_BLIP_COLOUR(lscBlip, 0xFFFFCCFF)
         else
             UI.REMOVE_BLIP(lscBlip)
             lscBlip = 0
@@ -631,6 +645,12 @@ function szaboAutoTheft.tick()
             
             if(lscDistance < minDistanceToLSC) then
                 -- Player too close to LSC, can't start mission, add some cooldown before checking again
+                cooldownCounter = cooldownTime / 2
+                return 
+            end
+
+            if(lscDistance > maxDistanceToLSC) then
+                -- Player too far from LSC, can't start mission, add some cooldown before checking again
                 cooldownCounter = cooldownTime / 2
                 return 
             end
